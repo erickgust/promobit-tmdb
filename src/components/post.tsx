@@ -21,7 +21,7 @@ export function Post ({ title, date, poster }: PostProps) {
       <img
         src={poster}
         alt='Poster'
-        className='object-cover rounded h-58 sm:h-66'
+        className='object-cover object-center rounded h-58 sm:h-66'
       />
 
       <div className='mt-2 flex flex-col'>
