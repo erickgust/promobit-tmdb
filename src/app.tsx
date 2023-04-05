@@ -1,39 +1,17 @@
-import { ReactNode, useState } from 'react'
-
-type ButtonProps = {
-  children: ReactNode
-  onClick: () => void
-}
-
-function Button ({ children, onClick }: ButtonProps) {
-  return (
-    <button
-      className='text-3xl font-bold'
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  )
-}
+import poster from '@/assets/poster.png'
 
 function App () {
-  const [counter, setCounter] = useState(0)
-
-  function handleIncrement () {
-    setCounter(counter => counter + 1)
-  }
-
-  function handleDecrement () {
-    setCounter(counter => counter - 1)
-  }
-
   return (
-    <div className='flex flex-col gap-4 items-center justify-center h-screen'>
-      <h1 className='text-3xl font-bold'>{counter}</h1>
+    <div className='inline-block'>
+      <img
+        src={poster}
+        alt='Poster'
+        className='object-cover rounded w-39 h-58 sm:h-66 sm:w-44'
+      />
 
-      <div className='flex gap-4'>
-        <Button onClick={handleDecrement}>-</Button>
-        <Button onClick={handleIncrement}>+</Button>
+      <div className='mt-2 flex flex-col'>
+        <strong>Oi, Alberto</strong>
+        <span>12 nov 2021</span>
       </div>
     </div>
   )
