@@ -1,15 +1,18 @@
+import { z } from 'zod'
 import { useEffect, useState } from 'react'
 import { GenreItem } from './genre-item'
 
-export type Genre = {
-  name: string
-  id: number
-}
+const genreListSchema = z.array(z.object({
+  name: z.string(),
+  id: z.number(),
+}))
+
+type GenreList = z.infer<typeof genreListSchema>
 
 const apiKey = import.meta.env.VITE_TMDB_API_KEY
 
 export function Genres () {
-  const [genres, setGenres] = useState<Genre[]>([])
+  const [genres, setGenres] = useState<GenreList>([])
   const [selectedGenres, setSelectedGenres] = useState<number[]>([])
 
   useEffect(() => {
@@ -17,9 +20,18 @@ export function Genres () {
       const url = 'https://api.themoviedb.org/3/genre/movie/list?language=pt'
 
       const response = await fetch(`${url}&api_key=${apiKey}`)
+
+      if (!response.ok) {
+        throw new Error('Não foi possível obter os gêneros')
+      }
+
       const data = await response.json()
 
-      setGenres(data.genres)
+      const { genres } = z.object({
+        genres: genreListSchema,
+      }).parse(data)
+
+      setGenres(genres)
     }
 
     getGenres()
