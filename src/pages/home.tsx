@@ -11,11 +11,13 @@ export function Home () {
       <main>
         <Genres />
 
-        <Post
-          date='2021-11-12'
-          poster={poster}
-          title='Homem-Aranha: Sem Volta Para Casa'
-        />
+        <section className='max-w-7xl px-4 py-8 mx-auto'>
+          <Post
+            date='2021-11-12'
+            poster={poster}
+            title='Homem-Aranha: Sem Volta Para Casa'
+          />
+        </section>
       </main>
     </div>
   )
