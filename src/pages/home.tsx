@@ -54,6 +54,8 @@ export function Home () {
 
   useEffect(() => {
     async function getMovies () {
+      const selectedGenresQuery = selectedGenres.join('|')
+
       const query = new URLSearchParams({
         api_key: apiKey,
         language: 'pt-BR',
@@ -61,6 +63,7 @@ export function Home () {
         include_adult: 'false',
         include_video: 'false',
         page: '1',
+        with_genres: selectedGenresQuery,
       })
 
       const response = await fetch(`https://api.themoviedb.org/3/discover/movie?${query}`)
@@ -76,7 +79,7 @@ export function Home () {
     }
 
     getMovies()
-  }, [])
+  }, [selectedGenres])
 
   function handleSelectedGenre (id: number) {
     const alreadySelected = selectedGenres.includes(id)
