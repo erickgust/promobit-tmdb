@@ -1,9 +1,13 @@
+import { z } from 'zod'
 import { useEffect, useState } from 'react'
 import { Genres } from '@/components/genres'
 import { Header } from '@/components/header'
 import { Post } from '@/components/post'
-import poster from '@/assets/poster.png'
-import { z } from 'zod'
+
+const genreListSchema = z.array(z.object({
+  name: z.string(),
+  id: z.number(),
+}))
 
 const discoverScheme = z.object({
   page: z.number(),
@@ -15,15 +19,43 @@ const discoverScheme = z.object({
   total_pages: z.number(),
 })
 
+export type GenreList = z.infer<typeof genreListSchema>
 type Movies = z.infer<typeof discoverScheme>['results']
+
+const apiKey = import.meta.env.VITE_TMDB_API_KEY
 
 export function Home () {
   const [movies, setMovies] = useState<Movies>([])
 
+  const [genres, setGenres] = useState<GenreList>([])
+  const [selectedGenres, setSelectedGenres] = useState<number[]>([])
+
+  useEffect(() => {
+    async function getGenres () {
+      const url = 'https://api.themoviedb.org/3/genre/movie/list?language=pt'
+
+      const response = await fetch(`${url}&api_key=${apiKey}`)
+
+      if (!response.ok) {
+        throw new Error('Não foi possível obter os gêneros')
+      }
+
+      const data = await response.json()
+
+      const { genres } = z.object({
+        genres: genreListSchema,
+      }).parse(data)
+
+      setGenres(genres)
+    }
+
+    getGenres()
+  }, [])
+
   useEffect(() => {
     async function getMovies () {
       const query = new URLSearchParams({
-        api_key: import.meta.env.VITE_TMDB_API_KEY,
+        api_key: apiKey,
         language: 'pt-BR',
         sort_by: 'popularity.desc',
         include_adult: 'false',
@@ -46,12 +78,28 @@ export function Home () {
     getMovies()
   }, [])
 
+  function handleSelectedGenre (id: number) {
+    const alreadySelected = selectedGenres.includes(id)
+
+    if (alreadySelected) {
+      const filteredGenres = selectedGenres.filter(item => item !== id)
+
+      setSelectedGenres(filteredGenres)
+    } else {
+      setSelectedGenres(prevState => [...prevState, id])
+    }
+  }
+
   return (
     <div>
       <Header />
 
       <main>
-        <Genres />
+        <Genres
+          genres={genres}
+          selectedGenres={selectedGenres}
+          onSelectedGenre={handleSelectedGenre}
+        />
 
         <section className='max-w-7xl px-4 py-8 flex justify-center gap-4 flex-wrap'>
           {movies.map(movie => (

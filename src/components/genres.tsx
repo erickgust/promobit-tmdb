@@ -1,54 +1,13 @@
-import { z } from 'zod'
-import { useEffect, useState } from 'react'
+import { GenreList } from '@/pages/home'
 import { GenreItem } from './genre-item'
 
-const genreListSchema = z.array(z.object({
-  name: z.string(),
-  id: z.number(),
-}))
+type GenresProps = {
+  genres: GenreList
+  selectedGenres: number[]
+  onSelectedGenre: (id: number) => void
+}
 
-type GenreList = z.infer<typeof genreListSchema>
-
-const apiKey = import.meta.env.VITE_TMDB_API_KEY
-
-export function Genres () {
-  const [genres, setGenres] = useState<GenreList>([])
-  const [selectedGenres, setSelectedGenres] = useState<number[]>([])
-
-  useEffect(() => {
-    async function getGenres () {
-      const url = 'https://api.themoviedb.org/3/genre/movie/list?language=pt'
-
-      const response = await fetch(`${url}&api_key=${apiKey}`)
-
-      if (!response.ok) {
-        throw new Error('Não foi possível obter os gêneros')
-      }
-
-      const data = await response.json()
-
-      const { genres } = z.object({
-        genres: genreListSchema,
-      }).parse(data)
-
-      setGenres(genres)
-    }
-
-    getGenres()
-  }, [])
-
-  function handleSelectedGenre (id: number) {
-    const alreadySelected = selectedGenres.includes(id)
-
-    if (alreadySelected) {
-      const filteredGenres = selectedGenres.filter(item => item !== id)
-
-      setSelectedGenres(filteredGenres)
-    } else {
-      setSelectedGenres(prevState => [...prevState, id])
-    }
-  }
-
+export function Genres ({ genres, selectedGenres, onSelectedGenre }: GenresProps) {
   return (
     <header className='bg-[#2e1065] text-white sm:text-center px-4 py-10'>
       <div className='max-w-6xl mx-auto'>
@@ -67,7 +26,7 @@ export function Genres () {
                 key={genre.id}
                 genreName={genre.name}
                 isSelected={selectedGenres.includes(genre.id)}
-                onSelectedGenre={() => handleSelectedGenre(genre.id)}
+                onSelectedGenre={() => onSelectedGenre(genre.id)}
               />
             ))}
           </ul>
