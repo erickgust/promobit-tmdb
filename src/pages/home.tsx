@@ -4,10 +4,12 @@ import { Genres } from '@/components/genres'
 import { Header } from '@/components/header'
 import { Post } from '@/components/post'
 
-const genreListSchema = z.array(z.object({
-  name: z.string(),
-  id: z.number(),
-}))
+const genresSchema = z.object({
+  genres: z.array(z.object({
+    name: z.string(),
+    id: z.number(),
+  })),
+})
 
 const discoverScheme = z.object({
   page: z.number(),
@@ -19,7 +21,7 @@ const discoverScheme = z.object({
   total_pages: z.number(),
 })
 
-export type GenreList = z.infer<typeof genreListSchema>
+export type GenreList = z.infer<typeof genresSchema>['genres']
 type Movies = z.infer<typeof discoverScheme>['results']
 
 const apiKey = import.meta.env.VITE_TMDB_API_KEY
@@ -45,10 +47,7 @@ export function Home () {
       }
 
       const data = await response.json()
-
-      const { genres } = z.object({
-        genres: genreListSchema,
-      }).parse(data)
+      const { genres } = genresSchema.parse(data)
 
       setGenres(genres)
     }
