@@ -32,9 +32,13 @@ export function Home () {
 
   useEffect(() => {
     async function getGenres () {
-      const url = 'https://api.themoviedb.org/3/genre/movie/list?language=pt'
+      const query = new URLSearchParams({
+        api_key: apiKey,
+        language: 'pt-BR',
+      })
 
-      const response = await fetch(`${url}&api_key=${apiKey}`)
+      const url = `https://api.themoviedb.org/3/genre/movie/list?${query}`
+      const response = await fetch(url)
 
       if (!response.ok) {
         throw new Error('Não foi possível obter os gêneros')
