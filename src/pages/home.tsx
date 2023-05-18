@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { useEffect, useState } from 'react'
 import { Genres } from '@/components/genres'
-import { Header } from '@/components/header'
 import { Post } from '@/components/post'
 
 const genresSchema = z.object({
@@ -98,8 +97,6 @@ export function Home () {
 
   return (
     <div>
-      <Header />
-
       <main>
         <Genres
           genres={genres}
