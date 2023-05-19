@@ -29,7 +29,7 @@ export function Post ({ title, date, poster }: PostProps) {
           {title}
         </strong>
 
-        <span className='text-xs sm:text-sm text-gray-500 uppercase'>
+        <span className='text-xs sm:text-sm text-gray-500 uppercase font-bold'>
           {formatDate(date)}
         </span>
       </div>

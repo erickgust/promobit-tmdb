@@ -10,7 +10,7 @@ type GenresProps = {
 export function Genres ({ genres, selectedGenres, onSelectedGenre }: GenresProps) {
   return (
     <header className='bg-[#2e1065] text-white sm:text-center px-4 py-10'>
-      <div className='max-w-6xl mx-auto'>
+      <div className='max-w-6xl mx-auto font-bold'>
         <h1 className='text-2xl sm:text-5xl'>
           Milhões de filmes, séries e pessoas para descobrir. Explore já.
         </h1>
