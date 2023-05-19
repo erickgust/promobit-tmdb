@@ -96,25 +96,23 @@ export function Home () {
   }
 
   return (
-    <div>
-      <main>
-        <Genres
-          genres={genres}
-          selectedGenres={selectedGenres}
-          onSelectedGenre={handleSelectedGenre}
-        />
+    <main>
+      <Genres
+        genres={genres}
+        selectedGenres={selectedGenres}
+        onSelectedGenre={handleSelectedGenre}
+      />
 
-        <section className='max-w-7xl px-4 py-8 flex justify-center gap-4 flex-wrap'>
-          {movies.map(movie => (
-            <Post
-              key={movie.title}
-              date={movie.release_date}
-              poster={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-              title={movie.title}
-            />
-          ))}
-        </section>
-      </main>
-    </div>
+      <section className='max-w-7xl px-4 py-8 flex justify-center gap-4 flex-wrap'>
+        {movies.map(movie => (
+          <Post
+            key={movie.title}
+            date={movie.release_date}
+            poster={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            title={movie.title}
+          />
+        ))}
+      </section>
+    </main>
   )
 }
