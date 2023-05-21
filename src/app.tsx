@@ -1,6 +1,7 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { Home } from './pages/home'
 import { Root } from './pages/root'
+import { MovieDetails } from './pages/movie-details'
 
 const router = createBrowserRouter([
   {
@@ -10,6 +11,10 @@ const router = createBrowserRouter([
       {
         path: '',
         element: <Home />,
+      },
+      {
+        path: ':movieId',
+        element: <MovieDetails />,
       },
     ],
   },
