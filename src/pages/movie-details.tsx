@@ -1,6 +1,20 @@
 import { CircularProgress } from '@/components/circular-progress'
 import { useParams } from 'react-router-dom'
 
+type AuthorInfoProps = {
+  name: string
+  role: string
+}
+
+function AuthorInfo (props: AuthorInfoProps) {
+  return (
+    <div className='text-base'>
+      <strong>{props.name}</strong>
+      <p className='text-sm'>{props.role}</p>
+    </div>
+  )
+}
+
 export function MovieDetails () {
   const { movieId } = useParams()
 
@@ -42,25 +56,10 @@ export function MovieDetails () {
             </div>
 
             <div className='grid gap-6 grid-cols-[repeat(auto-fit,minmax(100px,1fr))] mt-8'>
-              <div>
-                <strong>Rob Liefeld</strong>
-                <p>Characters</p>
-              </div>
-
-              <div>
-                <strong>Rob Liefeld</strong>
-                <p>Characters</p>
-              </div>
-
-              <div>
-                <strong>Rob Liefeld</strong>
-                <p>Characters</p>
-              </div>
-
-              <div>
-                <strong>Rob Liefeld</strong>
-                <p>Characters</p>
-              </div>
+              <AuthorInfo name='Rob Liefeld' role='Characters' />
+              <AuthorInfo name='Rob Liefeld' role='Characters' />
+              <AuthorInfo name='Rob Liefeld' role='Characters' />
+              <AuthorInfo name='Rob Liefeld' role='Characters' />
             </div>
           </div>
         </div>
