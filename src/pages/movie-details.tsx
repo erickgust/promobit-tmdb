@@ -15,28 +15,39 @@ function AuthorInfo (props: AuthorInfoProps) {
   )
 }
 
+function BulletPoint () {
+  return (
+    <span className='after:hidden sm:after:block after:absolute after:w-1 after:h-1 after:rounded-full after:bg-white relative after:top-1/2 after:-translate-y-1/2 after:right-0' />
+  )
+}
+
 export function MovieDetails () {
   const { movieId } = useParams()
 
   return (
     <main>
-      <header className='bg-[#2e1065] text-white p-4'>
+      <header className='bg-[#2e1065] text-white p-4 sm:flex items-start gap-8'>
         <img
           src='https://image.tmdb.org/t/p/w500/rXTqhpkpj6E0YilQ49PK1SSqLhm.jpg'
           alt='Poster'
-          className='object-cover object-center rounded-lg w-44 drop-shadow-md mx-auto'
+          className='object-cover object-center rounded-lg w-44 sm:w-96 drop-shadow-md mx-auto my-9 sm:my-0'
         />
 
         <div>
-          <h1 className='text-3xl font-bold'>
+          <h1 className='text-3xl font-bold mb-2'>
             Deadpool 2 (2018)
           </h1>
 
-          <div className='flex text-lg font-normal flex-col'>
-            <span>16 anos</span>
-            <span>15/05/2018</span>
-            <span>Ação, Comédia, Aventura, Ficção científica</span>
-            <span>1h 59m</span>
+          <div>
+            <ul className='flex text-base font-normal flex-col sm:flex-row sm:gap-4'>
+              <li>16 anos</li>
+              <BulletPoint />
+              <li>15/05/2018</li>
+              <BulletPoint />
+              <li>Ação, Comédia, Aventura</li>
+              <BulletPoint />
+              <li>1h 59m</li>
+            </ul>
 
             <div className='flex items-center justify-start gap-1 w-60 my-8'>
               <CircularProgress size={75} percent={76} />
