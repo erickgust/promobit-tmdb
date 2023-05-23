@@ -1,4 +1,5 @@
 import { CircularProgress } from '@/components/circular-progress'
+import { Post } from '@/components/post'
 import { useParams } from 'react-router-dom'
 
 type AuthorInfoProps = {
@@ -104,7 +105,7 @@ export function MovieDetails () {
 
       <div className='mt-11 sm:mt-20 max-w-7xl mx-auto'>
         <section>
-          <h2 className='font-bold text-2xl'>Elenco</h2>
+          <h2 className='font-bold text-2xl mb-4 sm:mb-6'>Elenco</h2>
 
           <div className='overflow-x-auto whitespace-nowrap'>
             <ActorProfile
@@ -120,8 +121,8 @@ export function MovieDetails () {
           </div>
         </section>
 
-        <section>
-          <h2 className='font-bold text-2xl'>Trailer</h2>
+        <section className='mt-12 sm:mt-16'>
+          <h2 className='font-bold text-2xl mb-4 sm:mb-6'>Trailer</h2>
 
           <div className='aspect-video mt-4 max-w-5xl'>
             <iframe
@@ -129,6 +130,18 @@ export function MovieDetails () {
               title='YouTube video player'
               allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
               className='w-full h-full'
+            />
+          </div>
+        </section>
+
+        <section className='mt-12 sm:mt-16'>
+          <h2 className='font-bold text-2xl mb-4 sm:mb-6'>Recomendações</h2>
+
+          <div className='flex gap-4 sm:gap-8 flex-wrap'>
+            <Post
+              date='2021-08-20'
+              poster='https://image.tmdb.org/t/p/w500/6MKr3KgOLmzOP6MSuZERO41Lpkt.jpg'
+              title='Cruella'
             />
           </div>
         </section>
