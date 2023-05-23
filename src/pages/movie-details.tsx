@@ -21,6 +21,30 @@ function BulletPoint () {
   )
 }
 
+type ActorProfileProps = {
+  name: string
+  character: string
+  image: string
+}
+
+function ActorProfile (props: ActorProfileProps) {
+  return (
+    <article className='p-2 rounded-md inline-block overflow-hidden w-48 shadow-md first:ml-0 mx-2'>
+      <img
+        src={props.image}
+        alt='Ryan'
+        className='object-center object-cover rounded-md'
+        loading='lazy'
+      />
+
+      <div className='mt-4'>
+        <strong className='text-lg'>{props.name}</strong>
+        <p className='text-base pt-1'>{props.character}</p>
+      </div>
+    </article>
+  )
+}
+
 export function MovieDetails () {
   const { movieId } = useParams()
 
@@ -77,6 +101,25 @@ export function MovieDetails () {
           </div>
         </div>
       </header>
+
+      <div className='mt-11 sm:mt-20 max-w-7xl mx-auto'>
+        <section>
+          <h2 className='font-bold text-2xl'>Elenco</h2>
+
+          <div className='overflow-x-auto whitespace-nowrap'>
+            <ActorProfile
+              name='Ryan Reynolds'
+              character='Wade Wilson / Deadpool'
+              image='https://image.tmdb.org/t/p/w185/4SYTH5FdB0dAORV98Nwg3llgVnY.jpg'
+              />
+            <ActorProfile
+              name='Morena Baccarin'
+              character='Vanessa'
+              image='https://image.tmdb.org/t/p/w185/tXRXo0pGFPq1sMr5u6ELjLLfbsq.jpg'
+            />
+          </div>
+        </section>
+      </div>
     </main>
   )
 }
