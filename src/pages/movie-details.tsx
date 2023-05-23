@@ -119,6 +119,19 @@ export function MovieDetails () {
             />
           </div>
         </section>
+
+        <section>
+          <h2 className='font-bold text-2xl'>Trailer</h2>
+
+          <div className='aspect-video mt-4 max-w-5xl'>
+            <iframe
+              src='https://www.youtube.com/embed/20bpjtCbCz0'
+              title='YouTube video player'
+              allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+              className='w-full h-full'
+            />
+          </div>
+        </section>
       </div>
     </main>
   )
