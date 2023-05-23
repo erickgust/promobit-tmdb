@@ -10,4 +10,26 @@
   html {
     font-family: 'Roboto', sans-serif;
   }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #ADADAD #DDDDDD;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 15px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #DDDDDD;
+    border-radius: 5px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #ADADAD;
+    border-radius: 14px;
+    border: 3px solid #DDDDDD;
+  }
 }
