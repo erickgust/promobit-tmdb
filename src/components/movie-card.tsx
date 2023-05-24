@@ -9,13 +9,13 @@ function formatDate (date: string) {
   return formattedDate
 }
 
-type PostProps = {
+type MovieCardProps = {
   title: string
   date: string
   poster: string
 }
 
-export function Post ({ title, date, poster }: PostProps) {
+export function MovieCard ({ title, date, poster }: MovieCardProps) {
   return (
     <article className='inline-block w-39 sm:w-44'>
       <img

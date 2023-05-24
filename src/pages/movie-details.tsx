@@ -1,5 +1,5 @@
 import { CircularProgress } from '@/components/circular-progress'
-import { Post } from '@/components/post'
+import { MovieCard } from '@/components/movie-card'
 import { useParams } from 'react-router-dom'
 
 type AuthorInfoProps = {
@@ -138,7 +138,7 @@ export function MovieDetails () {
           <h2 className='font-bold text-2xl mb-4 sm:mb-6'>Recomendações</h2>
 
           <div className='flex gap-4 sm:gap-8 flex-wrap'>
-            <Post
+            <MovieCard
               date='2021-08-20'
               poster='https://image.tmdb.org/t/p/w500/6MKr3KgOLmzOP6MSuZERO41Lpkt.jpg'
               title='Cruella'

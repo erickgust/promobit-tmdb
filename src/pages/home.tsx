@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { useEffect, useState } from 'react'
 import { Genres } from '@/components/genres'
-import { Post } from '@/components/post'
+import { MovieCard } from '@/components/movie-card'
 
 const genresSchema = z.object({
   genres: z.array(z.object({
@@ -13,7 +13,7 @@ const genresSchema = z.object({
 const discoverScheme = z.object({
   page: z.number(),
   results: z.array(z.object({
-    poster_path: z.string(),
+    poster_path: z.string().nullable(),
     release_date: z.string(),
     title: z.string(),
   })),
@@ -103,9 +103,9 @@ export function Home () {
         onSelectedGenre={handleSelectedGenre}
       />
 
-      <section className='max-w-7xl px-4 py-8 flex justify-center gap-4 flex-wrap'>
+      <section className='max-w-7xl px-4 py-8 flex justify-center gap-4 sm:gap-8 flex-wrap'>
         {movies.map(movie => (
-          <Post
+          <MovieCard
             key={movie.title}
             date={movie.release_date}
             poster={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
