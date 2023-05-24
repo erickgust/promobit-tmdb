@@ -103,7 +103,7 @@ export function MovieDetails () {
         </div>
       </header>
 
-      <div className='mt-11 sm:mt-20 max-w-7xl mx-auto'>
+      <div className='mt-11 sm:mt-20 max-w-7xl mx-auto px-4'>
         <section>
           <h2 className='font-bold text-2xl mb-4 sm:mb-6'>Elenco</h2>
 
