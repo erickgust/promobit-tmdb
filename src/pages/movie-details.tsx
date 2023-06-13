@@ -1,6 +1,7 @@
 import { CircularProgress } from '@/components/circular-progress'
 import { MovieCard } from '@/components/movie-card'
 import { useParams } from 'react-router-dom'
+import { GenreList } from './home'
 
 type AuthorInfoProps = {
   name: string
@@ -46,37 +47,214 @@ function ActorProfile (props: ActorProfileProps) {
   )
 }
 
+type Movie = {
+  id: number
+  runtime: number
+  genres: GenreList
+  title: string
+  overview: string
+  poster_path: string
+  vote_average: number
+  recommendations: {
+    results: Array<{
+      id: number
+      title: string
+      poster_path: string
+      release_date: string
+    }>
+  }
+  release_dates: {
+    results: Array<{
+      iso_3166_1: string
+      release_dates: Array<{
+        certification: string
+        release_date: string
+      }>
+    }>
+  }
+  credits: {
+    cast: Array<{
+      id: number
+      name: string
+      character: string
+      profile_path: string
+    }>
+    crew: Array<{
+      id: number
+      name: string
+      job: string
+    }>
+  }
+  videos: {
+    results: Array<{
+      key: string
+      type: string
+    }>
+  }
+}
+
+const movie: Movie = {
+  id: 603692,
+  runtime: 170,
+  vote_average: 7.954,
+  genres: [
+    {
+      id: 28,
+      name: 'Ação',
+    },
+    {
+      id: 53,
+      name: 'Thriller',
+    },
+    {
+      id: 80,
+      name: 'Crime',
+    },
+  ],
+  title: 'John Wick 4: Baba Yaga',
+  overview: 'Com o preço por sua cabeça cada vez maior, John Wick leva sua luta contra a alta mesa global enquanto procura os jogadores mais poderosos do submundo, de Nova York a Paris, de Osaka a Berlim.',
+  poster_path: '/rXTqhpkpj6E0YilQ49PK1SSqLhm.jpg',
+  recommendations: {
+    results: [
+      {
+        id: 1098239,
+        title: 'Tangos, Tequilas e Algumas Mentiras',
+        poster_path: '/y3z6H8oOS2y3dQY9dEKkxQiLWPn.jpg',
+        release_date: '2023-03-09',
+      },
+      {
+        id: 802401,
+        title: 'Demon Slayer: Kimetsu no Yaiba Mt. Natagumo Arc',
+        poster_path: '/wq1UG5lPCKpOJgmgpKJszKvoMUe.jpg',
+        release_date: '2021-04-15',
+      },
+      {
+        id: 24791,
+        title: 'A',
+        poster_path: '/dBLzrfh5DtxJey1hOYZaN2drPe3.jpg',
+        release_date: '1998-09-09',
+      },
+      {
+        id: 502356,
+        title: 'Super Mario Bros.: O Filme',
+        poster_path: '/ktU3MIeZtuEVRlMftgp0HMX2WR7.jpg',
+        release_date: '2023-04-05',
+      },
+      {
+        id: 385687,
+        title: 'Velozes & Furiosos 10',
+        poster_path: '/nxrmpkwVdmiVAiRTqSSC2SateN2.jpg',
+        release_date: '2023-05-17',
+      },
+      {
+        id: 525644,
+        title: 'B.O.O.O.M.',
+        poster_path: '/skb3JoNXIMNqIeQ5ziA3bY0t2Jq.jpg',
+        release_date: '1979-05-21',
+      },
+    ],
+  },
+  release_dates: {
+    results: [
+      {
+        iso_3166_1: 'BR',
+        release_dates: [
+          {
+            certification: '16',
+            release_date: '2021-05-27',
+          },
+        ],
+      },
+    ],
+  },
+  credits: {
+    cast: [
+      {
+        id: 6384,
+        name: 'Keanu Reeves',
+        profile_path: '/4D0PpNI0kmP58hgrwGC3wCjxhnm.jpg',
+        character: 'John Wick',
+      },
+      {
+        id: 1341,
+        name: 'Donnie Yen',
+        profile_path: '/hTlhrrZMj8hZVvD17j4KyAFWBHc.jpg',
+        character: 'Caine',
+      },
+    ],
+    crew: [
+      {
+        id: 3615,
+        name: 'Manfred Banach',
+        job: 'Sound Mixer',
+      },
+      {
+        id: 3615,
+        name: 'Manfred Banach',
+        job: 'Production Sound Mixer',
+      },
+      {
+        id: 3683,
+        name: 'Paco Delgado',
+        job: 'Costume Design',
+      },
+      {
+        id: 6384,
+        name: 'Keanu Reeves',
+        job: 'Executive Producer',
+      },
+    ],
+  },
+  videos: {
+    results: [{
+      key: 'Te3L5rT1Q8w',
+      type: 'Trailer',
+    }],
+  },
+}
+
 export function MovieDetails () {
   const { movieId } = useParams()
+  const releaseInfo = movie.release_dates.results[0].release_dates[0]
+  const country = movie.release_dates.results[0].iso_3166_1
+  const ageRestriction = releaseInfo.certification
+  const releaseDate = releaseInfo.release_date.split('-').reverse().join('/')
+  const duration = (
+    Math.floor(movie.runtime / 60) + 'h ' +
+    (movie.runtime % 60) + 'm'
+  )
+  const userRating = Math.round(movie.vote_average * 10)
 
   return (
     <main>
       <header className='bg-[#2e1065] text-white p-4 py-16 sm:max-h-[36rem]'>
         <div className='w-full max-w-7xl mx-auto sm:flex items-start gap-8'>
           <img
-            src='https://image.tmdb.org/t/p/w600_and_h900_bestv2/rXTqhpkpj6E0YilQ49PK1SSqLhm.jpg'
+            src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`}
             alt='Poster'
             className='object-cover object-center rounded-lg w-44 sm:w-96 drop-shadow-md mx-auto my-9 sm:my-0'
           />
 
           <div>
             <h1 className='text-3xl font-bold mb-2'>
-              Deadpool 2 (2018)
+              {movie.title}
             </h1>
 
             <div>
               <ul className='flex text-base font-normal flex-col sm:flex-row sm:gap-4'>
-                <li>16 anos</li>
+                <li>{ageRestriction} anos</li>
                 <BulletPoint />
-                <li>15/05/2018</li>
+                <li>{releaseDate} ({country})</li>
                 <BulletPoint />
-                <li>Ação, Comédia, Aventura</li>
+                <li>
+                  {movie.genres.map(genre => genre.name).join(', ')}
+                </li>
                 <BulletPoint />
-                <li>1h 59m</li>
+                <li>{duration}</li>
               </ul>
 
               <div className='flex items-center justify-start gap-1 w-60 my-8'>
-                <CircularProgress size={75} percent={76} />
+                <CircularProgress size={75} percent={userRating} />
                 <span className='inline-block text-base'>
                   Avaliação dos usuários
                 </span>
@@ -88,15 +266,18 @@ export function MovieDetails () {
                 </h2>
 
                 <p className='text-base'>
-                  Baseado no anti-herói não convencional da Marvel Comics, Deadpool conta a história da origem do ex-agente das Forças Especiais que se tornou o mercenário Wade Wilson. Depois de ser submetido a um desonesto experimento que o deixa com poderes de cura acelerada, Wade adota o alter ego de Deadpool. Armado com suas novas habilidades e um senso de humor negro e distorcido, Deadpool persegue o homem que quase destruiu sua vida.
+                  {movie.overview}
                 </p>
               </div>
 
               <div className='grid gap-6 grid-cols-[repeat(auto-fit,minmax(100px,1fr))] mt-8'>
-                <AuthorInfo name='Rob Liefeld' role='Characters' />
-                <AuthorInfo name='Rob Liefeld' role='Characters' />
-                <AuthorInfo name='Rob Liefeld' role='Characters' />
-                <AuthorInfo name='Rob Liefeld' role='Characters' />
+                {movie.credits.crew.map(crew => (
+                  <AuthorInfo
+                    key={crew.id}
+                    name={crew.name}
+                    role={crew.job}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -108,16 +289,14 @@ export function MovieDetails () {
           <h2 className='font-bold text-2xl mb-4 sm:mb-6'>Elenco</h2>
 
           <div className='overflow-x-auto whitespace-nowrap'>
-            <ActorProfile
-              name='Ryan Reynolds'
-              character='Wade Wilson / Deadpool'
-              image='https://image.tmdb.org/t/p/w185/4SYTH5FdB0dAORV98Nwg3llgVnY.jpg'
+            {movie.credits.cast.map(actor => (
+              <ActorProfile
+                key={actor.id}
+                name={actor.name}
+                character={actor.character}
+                image={`https://image.tmdb.org/t/p/w185${actor.profile_path}`}
               />
-            <ActorProfile
-              name='Morena Baccarin'
-              character='Vanessa'
-              image='https://image.tmdb.org/t/p/w185/tXRXo0pGFPq1sMr5u6ELjLLfbsq.jpg'
-            />
+            ))}
           </div>
         </section>
 
@@ -126,7 +305,7 @@ export function MovieDetails () {
 
           <div className='aspect-video mt-4 max-w-5xl'>
             <iframe
-              src='https://www.youtube.com/embed/20bpjtCbCz0'
+              src={`https://www.youtube.com/embed/${movie.videos.results[0].key}`}
               title='YouTube video player'
               allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
               className='w-full h-full'
@@ -138,11 +317,14 @@ export function MovieDetails () {
           <h2 className='font-bold text-2xl mb-4 sm:mb-6'>Recomendações</h2>
 
           <div className='flex gap-4 sm:gap-8 flex-wrap'>
-            <MovieCard
-              date='2021-08-20'
-              poster='https://image.tmdb.org/t/p/w500/6MKr3KgOLmzOP6MSuZERO41Lpkt.jpg'
-              title='Cruella'
-            />
+            {movie.recommendations.results.map(recommendation => (
+              <MovieCard
+                key={recommendation.id}
+                date={recommendation.release_date}
+                poster={`https://image.tmdb.org/t/p/w500${recommendation.poster_path}`}
+                title={recommendation.title}
+              />
+            ))}
           </div>
         </section>
       </div>
