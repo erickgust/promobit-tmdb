@@ -1,7 +1,7 @@
+import { z } from 'zod'
 import { CircularProgress } from '@/components/circular-progress'
 import { MovieCard } from '@/components/movie-card'
 import { useParams } from 'react-router-dom'
-import { GenreList } from './home'
 
 type AuthorInfoProps = {
   name: string
@@ -47,51 +47,70 @@ function ActorProfile (props: ActorProfileProps) {
   )
 }
 
-type Movie = {
-  id: number
-  runtime: number
-  genres: GenreList
-  title: string
-  overview: string
-  poster_path: string
-  vote_average: number
-  recommendations: {
-    results: Array<{
-      id: number
-      title: string
-      poster_path: string
-      release_date: string
-    }>
-  }
-  release_dates: {
-    results: Array<{
-      iso_3166_1: string
-      release_dates: Array<{
-        certification: string
-        release_date: string
-      }>
-    }>
-  }
-  credits: {
-    cast: Array<{
-      id: number
-      name: string
-      character: string
-      profile_path: string
-    }>
-    crew: Array<{
-      id: number
-      name: string
-      job: string
-    }>
-  }
-  videos: {
-    results: Array<{
-      key: string
-      type: string
-    }>
-  }
-}
+const MovieSchema = z.object({
+  id: z.number(),
+  runtime: z.number(),
+  genres: z.array(
+    z.object({
+      id: z.number(),
+      name: z.string(),
+    }),
+  ),
+  title: z.string(),
+  overview: z.string(),
+  poster_path: z.string(),
+  vote_average: z.number(),
+  recommendations: z.object({
+    results: z.array(
+      z.object({
+        id: z.number(),
+        title: z.string(),
+        poster_path: z.string(),
+        release_date: z.string(),
+      }),
+    ),
+  }),
+  release_dates: z.object({
+    results: z.array(
+      z.object({
+        iso_3166_1: z.string(),
+        release_dates: z.array(
+          z.object({
+            certification: z.string(),
+            release_date: z.string(),
+          }),
+        ),
+      }),
+    ),
+  }),
+  credits: z.object({
+    cast: z.array(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        character: z.string(),
+        profile_path: z.string().nullable(),
+      }),
+    ),
+    crew: z.array(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        job: z.string(),
+      }),
+    ),
+  }),
+  videos: z.object({
+    results: z.array(
+      z.object({
+        key: z.string(),
+        type: z.string(),
+      }),
+    ),
+  }),
+})
+
+type Movie = z.infer<typeof MovieSchema>
 
 const movie: Movie = {
   id: 603692,
