@@ -1,6 +1,8 @@
 import dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
 
+import { ReactComponent as DefaultImage } from '@/assets/icons/default.svg'
+
 function formatDate (date: string) {
   const formattedDate = dayjs(date)
     .locale('pt-br')
@@ -16,13 +18,24 @@ type MovieCardProps = {
 }
 
 export function MovieCard ({ title, date, poster }: MovieCardProps) {
+  const isPosterNull = poster.includes('null')
+
   return (
     <article className='inline-block w-39 sm:w-44'>
-      <img
-        src={poster}
-        alt='Poster'
-        className='object-cover object-center rounded h-58 sm:h-66'
-      />
+      {!isPosterNull ? (
+        <img
+          src={poster}
+          alt={title}
+          className='object-cover object-center rounded h-58 sm:h-66'
+        />
+      ) : (
+        <div className='h-58 sm:h-66 bg-gray-100 flex items-center justify-center rounded'>
+          <DefaultImage
+            className='w-24 sm:w-28'
+            aria-label='No poster available'
+          />
+        </div>
+      )}
 
       <div className='mt-2 flex flex-col'>
         <strong className='text-sm sm:text-base'>
