@@ -6,12 +6,12 @@ import { useEffect, useState } from 'react'
 
 import { ReactComponent as DefaultImage } from '@/assets/icons/default.svg'
 
-type AuthorInfoProps = {
+type CrewInfoProps = {
   name: string
   role: string
 }
 
-function AuthorInfo (props: AuthorInfoProps) {
+function CrewInfo (props: CrewInfoProps) {
   return (
     <div className='text-base'>
       <strong>{props.name}</strong>
@@ -263,7 +263,7 @@ export function MovieDetails () {
 
               <div className='grid gap-6 grid-cols-[repeat(auto-fit,minmax(100px,1fr))] mt-8'>
                 {topCrewMembers?.map(crewMember => (
-                  <AuthorInfo
+                  <CrewInfo
                     key={crewMember.id}
                     name={crewMember.name}
                     role={crewMember.job}
