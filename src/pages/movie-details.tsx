@@ -158,6 +158,7 @@ const apiKey = import.meta.env.VITE_TMDB_API_KEY
 export function MovieDetails () {
   const { movieId } = useParams()
   const [movieData, setMovieData] = useState<Movie | null>(null)
+  const topCrewMembers = movieData?.credits.crew.slice(0, 5)
 
   useEffect(() => {
     async function getDetails () {
@@ -261,11 +262,11 @@ export function MovieDetails () {
               </div>
 
               <div className='grid gap-6 grid-cols-[repeat(auto-fit,minmax(100px,1fr))] mt-8'>
-                {movieData?.credits.crew.slice(0, 5).map(crew => (
+                {topCrewMembers?.map(crewMember => (
                   <AuthorInfo
-                    key={crew.id}
-                    name={crew.name}
-                    role={crew.job}
+                    key={crewMember.id}
+                    name={crewMember.name}
+                    role={crewMember.job}
                   />
                 ))}
               </div>
