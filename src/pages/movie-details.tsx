@@ -2,6 +2,9 @@ import { z } from 'zod'
 import { CircularProgress } from '@/components/circular-progress'
 import { MovieCard } from '@/components/movie-card'
 import { useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+
+import { ReactComponent as DefaultImage } from '@/assets/icons/default.svg'
 
 type AuthorInfoProps = {
   name: string
@@ -30,14 +33,25 @@ type ActorProfileProps = {
 }
 
 function ActorProfile (props: ActorProfileProps) {
+  const isImageNull = props.image.includes('null')
+
   return (
     <article className='p-2 rounded-md inline-block overflow-hidden w-48 shadow-md first:ml-0 mx-2'>
-      <img
-        src={props.image}
-        alt='Ryan'
-        className='object-center object-cover rounded-md'
-        loading='lazy'
-      />
+      {!isImageNull ? (
+        <img
+          src={props.image}
+          alt={props.name}
+          className='object-center object-cover rounded-md'
+          loading='lazy'
+        />
+      ) : (
+        <div className='bg-gray-100 flex justify-center items-center rounded-md h-66'>
+          <DefaultImage
+            className='w-24'
+            aria-label='No actor image available'
+          />
+        </div>
+      )}
 
       <div className='mt-4'>
         <strong className='text-lg'>{props.name}</strong>
@@ -47,7 +61,25 @@ function ActorProfile (props: ActorProfileProps) {
   )
 }
 
-const MovieSchema = z.object({
+const creditsSchema = z.object({
+  cast: z.array(
+    z.object({
+      id: z.number(),
+      name: z.string(),
+      character: z.string(),
+      profile_path: z.string().nullable(),
+    }),
+  ),
+  crew: z.array(
+    z.object({
+      id: z.number(),
+      name: z.string(),
+      job: z.string(),
+    }),
+  ),
+})
+
+const movieReqSchema = z.object({
   id: z.number(),
   runtime: z.number(),
   genres: z.array(
@@ -65,7 +97,7 @@ const MovieSchema = z.object({
       z.object({
         id: z.number(),
         title: z.string(),
-        poster_path: z.string(),
+        poster_path: z.string().nullable(),
         release_date: z.string(),
       }),
     ),
@@ -83,23 +115,7 @@ const MovieSchema = z.object({
       }),
     ),
   }),
-  credits: z.object({
-    cast: z.array(
-      z.object({
-        id: z.number(),
-        name: z.string(),
-        character: z.string(),
-        profile_path: z.string().nullable(),
-      }),
-    ),
-    crew: z.array(
-      z.object({
-        id: z.number(),
-        name: z.string(),
-        job: z.string(),
-      }),
-    ),
-  }),
+  credits: creditsSchema,
   videos: z.object({
     results: z.array(
       z.object({
@@ -110,170 +126,123 @@ const MovieSchema = z.object({
   }),
 })
 
-type Movie = z.infer<typeof MovieSchema>
-
-const movie: Movie = {
-  id: 603692,
-  runtime: 170,
-  vote_average: 7.954,
-  genres: [
-    {
-      id: 28,
-      name: 'Ação',
-    },
-    {
-      id: 53,
-      name: 'Thriller',
-    },
-    {
-      id: 80,
-      name: 'Crime',
-    },
-  ],
-  title: 'John Wick 4: Baba Yaga',
-  overview: 'Com o preço por sua cabeça cada vez maior, John Wick leva sua luta contra a alta mesa global enquanto procura os jogadores mais poderosos do submundo, de Nova York a Paris, de Osaka a Berlim.',
-  poster_path: '/rXTqhpkpj6E0YilQ49PK1SSqLhm.jpg',
+type Movie = {
+  id: number
+  runtime: number
+  genres: {
+    id: number
+    name: string
+  }[]
+  title: string
+  overview: string
+  posterPath: string
+  voteAverage: number
   recommendations: {
-    results: [
-      {
-        id: 1098239,
-        title: 'Tangos, Tequilas e Algumas Mentiras',
-        poster_path: '/y3z6H8oOS2y3dQY9dEKkxQiLWPn.jpg',
-        release_date: '2023-03-09',
-      },
-      {
-        id: 802401,
-        title: 'Demon Slayer: Kimetsu no Yaiba Mt. Natagumo Arc',
-        poster_path: '/wq1UG5lPCKpOJgmgpKJszKvoMUe.jpg',
-        release_date: '2021-04-15',
-      },
-      {
-        id: 24791,
-        title: 'A',
-        poster_path: '/dBLzrfh5DtxJey1hOYZaN2drPe3.jpg',
-        release_date: '1998-09-09',
-      },
-      {
-        id: 502356,
-        title: 'Super Mario Bros.: O Filme',
-        poster_path: '/ktU3MIeZtuEVRlMftgp0HMX2WR7.jpg',
-        release_date: '2023-04-05',
-      },
-      {
-        id: 385687,
-        title: 'Velozes & Furiosos 10',
-        poster_path: '/nxrmpkwVdmiVAiRTqSSC2SateN2.jpg',
-        release_date: '2023-05-17',
-      },
-      {
-        id: 525644,
-        title: 'B.O.O.O.M.',
-        poster_path: '/skb3JoNXIMNqIeQ5ziA3bY0t2Jq.jpg',
-        release_date: '1979-05-21',
-      },
-    ],
-  },
-  release_dates: {
-    results: [
-      {
-        iso_3166_1: 'BR',
-        release_dates: [
-          {
-            certification: '16',
-            release_date: '2021-05-27',
-          },
-        ],
-      },
-    ],
-  },
-  credits: {
-    cast: [
-      {
-        id: 6384,
-        name: 'Keanu Reeves',
-        profile_path: '/4D0PpNI0kmP58hgrwGC3wCjxhnm.jpg',
-        character: 'John Wick',
-      },
-      {
-        id: 1341,
-        name: 'Donnie Yen',
-        profile_path: '/hTlhrrZMj8hZVvD17j4KyAFWBHc.jpg',
-        character: 'Caine',
-      },
-    ],
-    crew: [
-      {
-        id: 3615,
-        name: 'Manfred Banach',
-        job: 'Sound Mixer',
-      },
-      {
-        id: 3615,
-        name: 'Manfred Banach',
-        job: 'Production Sound Mixer',
-      },
-      {
-        id: 3683,
-        name: 'Paco Delgado',
-        job: 'Costume Design',
-      },
-      {
-        id: 6384,
-        name: 'Keanu Reeves',
-        job: 'Executive Producer',
-      },
-    ],
-  },
-  videos: {
-    results: [{
-      key: 'Te3L5rT1Q8w',
-      type: 'Trailer',
-    }],
-  },
+    id: number
+    title: string
+    poster_path: string | null
+    release_date: string
+  }[]
+  credits: z.infer<typeof creditsSchema>
+  trailer?: {
+    key: string
+  }
+  ageRestriction: string
+  releaseDate: string
+  duration: string
+  userRating: number
 }
+
+const apiKey = import.meta.env.VITE_TMDB_API_KEY
 
 export function MovieDetails () {
   const { movieId } = useParams()
-  const releaseInfo = movie.release_dates.results[0].release_dates[0]
-  const country = movie.release_dates.results[0].iso_3166_1
-  const ageRestriction = releaseInfo.certification
-  const releaseDate = releaseInfo.release_date.split('-').reverse().join('/')
-  const duration = (
-    Math.floor(movie.runtime / 60) + 'h ' +
-    (movie.runtime % 60) + 'm'
-  )
-  const userRating = Math.round(movie.vote_average * 10)
+  const [movieData, setMovieData] = useState<Movie | null>(null)
+
+  useEffect(() => {
+    async function getDetails () {
+      const query = new URLSearchParams({
+        api_key: apiKey,
+        append_to_response: 'recommendations,release_dates,credits,videos',
+        language: 'pt-BR',
+      })
+
+      const response = await fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}?${query}`,
+      )
+
+      if (response.ok) {
+        const data = await response.json()
+        const movie = movieReqSchema.parse(data)
+
+        const releaseInfo = movie.release_dates.results.find(item => (
+          item.iso_3166_1 === 'BR'
+        ))
+
+        const releaseDate = releaseInfo
+          ? releaseInfo.release_dates[0]
+          : {
+              certification: '0',
+              release_date: '0000-00-00',
+            }
+
+        setMovieData({
+          id: movie.id,
+          runtime: movie.runtime,
+          genres: movie.genres,
+          title: movie.title,
+          overview: movie.overview,
+          posterPath: movie.poster_path,
+          voteAverage: movie.vote_average,
+          recommendations: movie.recommendations.results.slice(0, 6),
+          credits: movie.credits,
+          trailer: movie.videos.results.find(item => item.type === 'Trailer'),
+          ageRestriction: releaseDate.certification,
+          releaseDate: new Date(releaseDate.release_date).toLocaleDateString(
+            'pt-BR',
+          ),
+          duration: (
+            Math.floor(movie.runtime / 60) + 'h ' +
+            (movie.runtime % 60) + 'm'
+          ),
+          userRating: Math.round(movie.vote_average * 10),
+        })
+      }
+    }
+
+    getDetails()
+  }, [movieId])
 
   return (
     <main>
       <header className='bg-[#2e1065] text-white p-4 py-16 sm:max-h-[36rem]'>
         <div className='w-full max-w-7xl mx-auto sm:flex items-start gap-8'>
           <img
-            src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2${movie.poster_path}`}
+            src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2${movieData?.posterPath}`}
             alt='Poster'
             className='object-cover object-center rounded-lg w-44 sm:w-96 drop-shadow-md mx-auto my-9 sm:my-0'
           />
 
           <div>
             <h1 className='text-3xl font-bold mb-2'>
-              {movie.title}
+              {movieData?.title}
             </h1>
 
             <div>
               <ul className='flex text-base font-normal flex-col sm:flex-row sm:gap-4'>
-                <li>{ageRestriction} anos</li>
+                <li>{movieData?.ageRestriction} anos</li>
                 <BulletPoint />
-                <li>{releaseDate} ({country})</li>
+                <li>{movieData?.releaseDate} (BR)</li>
                 <BulletPoint />
                 <li>
-                  {movie.genres.map(genre => genre.name).join(', ')}
+                  {movieData?.genres.map(genre => genre.name).join(', ')}
                 </li>
                 <BulletPoint />
-                <li>{duration}</li>
+                <li>{movieData?.duration}</li>
               </ul>
 
               <div className='flex items-center justify-start gap-1 w-60 my-8'>
-                <CircularProgress size={75} percent={userRating} />
+                <CircularProgress size={75} percent={movieData?.userRating ?? 0} />
                 <span className='inline-block text-base'>
                   Avaliação dos usuários
                 </span>
@@ -285,12 +254,12 @@ export function MovieDetails () {
                 </h2>
 
                 <p className='text-base'>
-                  {movie.overview}
+                  {movieData?.overview}
                 </p>
               </div>
 
               <div className='grid gap-6 grid-cols-[repeat(auto-fit,minmax(100px,1fr))] mt-8'>
-                {movie.credits.crew.map(crew => (
+                {movieData?.credits.crew.slice(0, 5).map(crew => (
                   <AuthorInfo
                     key={crew.id}
                     name={crew.name}
@@ -308,7 +277,7 @@ export function MovieDetails () {
           <h2 className='font-bold text-2xl mb-4 sm:mb-6'>Elenco</h2>
 
           <div className='overflow-x-auto whitespace-nowrap'>
-            {movie.credits.cast.map(actor => (
+            {movieData?.credits.cast.map(actor => (
               <ActorProfile
                 key={actor.id}
                 name={actor.name}
@@ -319,24 +288,26 @@ export function MovieDetails () {
           </div>
         </section>
 
+        {!!movieData?.trailer && (
         <section className='mt-12 sm:mt-16'>
           <h2 className='font-bold text-2xl mb-4 sm:mb-6'>Trailer</h2>
 
           <div className='aspect-video mt-4 max-w-5xl'>
             <iframe
-              src={`https://www.youtube.com/embed/${movie.videos.results[0].key}`}
+              src={`https://www.youtube.com/embed/${movieData?.trailer.key}`}
               title='YouTube video player'
               allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
               className='w-full h-full'
             />
           </div>
         </section>
+        )}
 
         <section className='mt-12 sm:mt-16'>
           <h2 className='font-bold text-2xl mb-4 sm:mb-6'>Recomendações</h2>
 
           <div className='flex gap-4 sm:gap-8 flex-wrap'>
-            {movie.recommendations.results.map(recommendation => (
+            {movieData?.recommendations.map(recommendation => (
               <MovieCard
                 key={recommendation.id}
                 date={recommendation.release_date}
