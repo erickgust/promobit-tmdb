@@ -41,6 +41,7 @@
       "warn",
       "prefer-single"
     ],
+    "multiline-ternary": "off",
     "no-undef": "off",
     "react/react-in-jsx-scope": "off",
     "react/jsx-pascal-case": "off",
