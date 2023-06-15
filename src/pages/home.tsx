@@ -16,6 +16,7 @@ const discoverScheme = z.object({
     poster_path: z.string().nullable(),
     release_date: z.string(),
     title: z.string(),
+    id: z.number(),
   })),
   total_pages: z.number(),
 })
@@ -110,6 +111,7 @@ export function Home () {
             date={movie.release_date}
             poster={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
             title={movie.title}
+            id={movie.id}
           />
         ))}
       </section>

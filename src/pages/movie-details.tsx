@@ -314,6 +314,7 @@ export function MovieDetails () {
                 date={recommendation.release_date}
                 poster={`https://image.tmdb.org/t/p/w500${recommendation.poster_path}`}
                 title={recommendation.title}
+                id={recommendation.id}
               />
             ))}
           </div>
