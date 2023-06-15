@@ -184,7 +184,11 @@ function getReleaseInfo (movie: MovieReq) {
   }
 
   if (originalCountryExists) {
-    return { ...originalCountryExists.release_dates[0], country: originalCountry }
+    return {
+      ...originalCountryExists.release_dates[0],
+      release_date: movie.release_date,
+      country: originalCountry,
+    }
   }
 
   return { certification: 'L', release_date: movie.release_date, country: originalCountry }
@@ -214,7 +218,7 @@ export function MovieDetails () {
         const releaseInfo = getReleaseInfo(movie)
 
         const releaseDate = new Date(releaseInfo.release_date)
-          .toLocaleDateString('pt-BR')
+          .toLocaleDateString('pt-BR', { timeZone: 'UTC' })
 
         const duration = (
           Math.floor(movie.runtime / 60) + 'h ' + movie.runtime % 60 + 'm'
