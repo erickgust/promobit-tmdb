@@ -218,15 +218,13 @@ export function MovieDetails () {
     <main>
       <header className='bg-[#2e1065] text-white p-4 py-16 sm:max-h-[36rem]'>
         <div className='w-full max-w-7xl mx-auto sm:flex items-start gap-8'>
-          <div>
-            <img
-              src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2${movieData?.posterPath}`}
-              alt='Poster'
-              className='object-cover object-center rounded-lg w-44 sm:w-96 drop-shadow-md mx-auto my-9 sm:my-0'
-            />
-          </div>
+          <img
+            src={`https://image.tmdb.org/t/p/w600_and_h900_bestv2${movieData?.posterPath}`}
+            alt='Poster'
+            className='object-cover object-center rounded-lg w-44 sm:w-96 max-w-sm drop-shadow-md mx-auto my-9 sm:my-0'
+          />
 
-          <div>
+          <div className='w-full'>
             <h1 className='text-3xl font-bold mb-2'>
               {movieData?.title}
             </h1>
