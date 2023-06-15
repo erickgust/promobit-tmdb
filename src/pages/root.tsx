@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, ScrollRestoration } from 'react-router-dom'
 import { Header } from '@/components/header'
 
 export function Root () {
@@ -6,6 +6,7 @@ export function Root () {
     <>
       <Header />
       <Outlet />
+      <ScrollRestoration />
     </>
   )
 }
