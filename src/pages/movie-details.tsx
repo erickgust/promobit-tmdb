@@ -20,9 +20,15 @@ function CrewInfo (props: CrewInfoProps) {
   )
 }
 
-function BulletPoint () {
+type ListItemProps = {
+  children: React.ReactNode
+}
+
+function ListItem ({ children }: ListItemProps) {
   return (
-    <span className='after:hidden sm:after:block after:absolute after:w-1 after:h-1 after:rounded-full after:bg-white relative after:top-1/2 after:-translate-y-1/2 after:right-0' />
+    <li className='before:hidden sm:before:block before:absolute before:w-1 before:h-1 before:rounded-full before:bg-white relative before:top-1/2 before:-translate-y-1/2 before:left-2 pl-5'>
+      {children}
+    </li>
   )
 }
 
@@ -237,16 +243,20 @@ export function MovieDetails () {
             </h1>
 
             <div>
-              <ul className='flex text-base font-normal flex-col sm:flex-row sm:gap-4'>
-                <li>{movieData?.ageRestriction} anos</li>
-                <BulletPoint />
-                <li>{movieData?.releaseDate} ({movieData?.country})</li>
-                <BulletPoint />
-                <li>
-                  {movieData?.genres.map(genre => genre.name).join(', ')}
+              <ul className='flex text-base font-normal flex-col sm:flex-row'>
+                <li className='border px-1 rounded text-gray-400 border-gray-400 leading-none flex items-center'>
+                  {movieData?.ageRestriction}
                 </li>
-                <BulletPoint />
-                <li>{movieData?.duration}</li>
+
+                <ListItem>
+                  {movieData?.releaseDate} ({movieData?.country})
+                </ListItem>
+
+                <ListItem>
+                  {movieData?.genres.map(genre => genre.name).join(', ')}
+                </ListItem>
+
+                <ListItem>{movieData?.duration}</ListItem>
               </ul>
 
               <div className='flex items-center justify-start gap-1 w-60 my-8'>
