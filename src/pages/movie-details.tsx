@@ -61,7 +61,7 @@ function ActorProfile (props: ActorProfileProps) {
 
       <div className='mt-4'>
         <strong className='text-lg'>{props.name}</strong>
-        <p className='text-base pt-1'>{props.character}</p>
+        <p className='text-base pt-1 text-ellipsis overflow-hidden'>{props.character}</p>
       </div>
     </article>
   )
@@ -259,7 +259,7 @@ export function MovieDetails () {
             <div>
               <ul className='flex text-base font-normal flex-col sm:flex-row'>
                 <li className='border px-1 rounded text-gray-400 border-gray-400 leading-none flex items-center'>
-                  {movieData?.ageRestriction}
+                  {movieData?.ageRestriction || 'G'}
                 </li>
 
                 <ListItem>
