@@ -128,7 +128,6 @@ const movieReqSchema = z.object({
 
 type Movie = {
   id: number
-  runtime: number
   genres: {
     id: number
     name: string
@@ -136,7 +135,6 @@ type Movie = {
   title: string
   overview: string
   posterPath: string
-  voteAverage: number
   recommendations: {
     id: number
     title: string
@@ -189,12 +187,10 @@ export function MovieDetails () {
 
         setMovieData({
           id: movie.id,
-          runtime: movie.runtime,
           genres: movie.genres,
           title: movie.title,
           overview: movie.overview,
           posterPath: movie.poster_path,
-          voteAverage: movie.vote_average,
           recommendations: movie.recommendations.results.slice(0, 6),
           credits: movie.credits,
           trailer: movie.videos.results.find(item => item.type === 'Trailer'),
