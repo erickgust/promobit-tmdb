@@ -115,6 +115,12 @@ const movieReqSchema = z.object({
       }),
     ),
   }),
+  release_date: z.string(),
+  production_countries: z.array(
+    z.object({
+      iso_3166_1: z.string(),
+    }),
+  ),
   credits: creditsSchema,
   videos: z.object({
     results: z.array(
@@ -147,6 +153,7 @@ type Movie = {
   }
   ageRestriction: string
   releaseDate: string
+  country: string
   duration: string
   userRating: number
 }
@@ -174,16 +181,24 @@ export function MovieDetails () {
         const data = await response.json()
         const movie = movieReqSchema.parse(data)
 
-        const releaseInfo = movie.release_dates.results.find(item => (
+        const brReleaseExists = movie.release_dates.results.find(item => (
           item.iso_3166_1 === 'BR'
         ))
 
-        const releaseDate = releaseInfo
-          ? releaseInfo.release_dates[0]
+        const originalCountry = movie.production_countries[0].iso_3166_1
+
+        const releaseInfo = brReleaseExists
+          ? { ...brReleaseExists.release_dates[0], country: 'BR' }
           : {
-              certification: '0',
-              release_date: '0000-00-00',
+              certification: 'G',
+              release_date: movie.release_date,
+              country: originalCountry,
             }
+
+        const releaseDate = new Date(releaseInfo.release_date)
+          .toLocaleDateString('pt-BR')
+
+        const duration = Math.floor(movie.runtime / 60) + 'h ' + (movie.runtime % 60) + 'm'
 
         setMovieData({
           id: movie.id,
@@ -194,14 +209,10 @@ export function MovieDetails () {
           recommendations: movie.recommendations.results.slice(0, 6),
           credits: movie.credits,
           trailer: movie.videos.results.find(item => item.type === 'Trailer'),
-          ageRestriction: releaseDate.certification,
-          releaseDate: new Date(releaseDate.release_date).toLocaleDateString(
-            'pt-BR',
-          ),
-          duration: (
-            Math.floor(movie.runtime / 60) + 'h ' +
-            (movie.runtime % 60) + 'm'
-          ),
+          ageRestriction: releaseInfo.certification,
+          country: releaseInfo.country,
+          releaseDate,
+          duration,
           userRating: Math.round(movie.vote_average * 10),
         })
       }
@@ -229,7 +240,7 @@ export function MovieDetails () {
               <ul className='flex text-base font-normal flex-col sm:flex-row sm:gap-4'>
                 <li>{movieData?.ageRestriction} anos</li>
                 <BulletPoint />
-                <li>{movieData?.releaseDate} (BR)</li>
+                <li>{movieData?.releaseDate} ({movieData?.country})</li>
                 <BulletPoint />
                 <li>
                   {movieData?.genres.map(genre => genre.name).join(', ')}
