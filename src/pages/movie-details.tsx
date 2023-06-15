@@ -138,6 +138,8 @@ const movieReqSchema = z.object({
   }),
 })
 
+type MovieReq = z.infer<typeof movieReqSchema>
+
 type Movie = {
   id: number
   genres: {
@@ -166,6 +168,28 @@ type Movie = {
 
 const apiKey = import.meta.env.VITE_TMDB_API_KEY
 
+function getReleaseInfo (movie: MovieReq) {
+  const brReleaseExists = movie.release_dates.results.find(
+    item => item.iso_3166_1 === 'BR',
+  )
+
+  const originalCountry = movie.production_countries[0].iso_3166_1
+
+  const originalCountryExists = movie.release_dates.results.find(
+    item => item.iso_3166_1 === originalCountry,
+  )
+
+  if (brReleaseExists) {
+    return { ...brReleaseExists.release_dates[0], country: 'BR' }
+  }
+
+  if (originalCountryExists) {
+    return { ...originalCountryExists.release_dates[0], country: originalCountry }
+  }
+
+  return { certification: 'L', release_date: movie.release_date, country: originalCountry }
+}
+
 export function MovieDetails () {
   const { movieId } = useParams()
   const [movieData, setMovieData] = useState<Movie | null>(null)
@@ -187,24 +211,14 @@ export function MovieDetails () {
         const data = await response.json()
         const movie = movieReqSchema.parse(data)
 
-        const brReleaseExists = movie.release_dates.results.find(item => (
-          item.iso_3166_1 === 'BR'
-        ))
-
-        const originalCountry = movie.production_countries[0].iso_3166_1
-
-        const releaseInfo = brReleaseExists
-          ? { ...brReleaseExists.release_dates[0], country: 'BR' }
-          : {
-              certification: 'G',
-              release_date: movie.release_date,
-              country: originalCountry,
-            }
+        const releaseInfo = getReleaseInfo(movie)
 
         const releaseDate = new Date(releaseInfo.release_date)
           .toLocaleDateString('pt-BR')
 
-        const duration = Math.floor(movie.runtime / 60) + 'h ' + (movie.runtime % 60) + 'm'
+        const duration = (
+          Math.floor(movie.runtime / 60) + 'h ' + movie.runtime % 60 + 'm'
+        )
 
         setMovieData({
           id: movie.id,
