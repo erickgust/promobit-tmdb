@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { useEffect, useState } from 'react'
 import { Genres } from '@/components/genres'
 import { MovieCard } from '@/components/movie-card'
+import { get } from '@/utils/http'
 
 const genresSchema = z.object({
   genres: z.array(z.object({
@@ -24,8 +25,6 @@ const discoverScheme = z.object({
 export type GenreList = z.infer<typeof genresSchema>['genres']
 type Movies = z.infer<typeof discoverScheme>['results']
 
-const apiKey = import.meta.env.VITE_TMDB_API_KEY
-
 export function Home () {
   const [movies, setMovies] = useState<Movies>([])
 
@@ -34,22 +33,16 @@ export function Home () {
 
   useEffect(() => {
     async function getGenres () {
-      const query = new URLSearchParams({
-        api_key: apiKey,
-        language: 'pt-BR',
-      })
+      try {
+        const { genres } = await get(genresSchema, 'genre/movie/list', {
+          language: 'pt-BR',
+        })
 
-      const url = `https://api.themoviedb.org/3/genre/movie/list?${query}`
-      const response = await fetch(url)
-
-      if (!response.ok) {
+        setGenres(genres)
+      } catch {
+        setGenres([])
         throw new Error('Não foi possível obter os gêneros')
       }
-
-      const data = await response.json()
-      const { genres } = genresSchema.parse(data)
-
-      setGenres(genres)
     }
 
     getGenres()
@@ -59,26 +52,23 @@ export function Home () {
     async function getMovies () {
       const selectedGenresQuery = selectedGenres.join('|')
 
-      const query = new URLSearchParams({
-        api_key: apiKey,
+      const query = {
         language: 'pt-BR',
         sort_by: 'popularity.desc',
         include_adult: 'false',
         include_video: 'false',
         page: '1',
         with_genres: selectedGenresQuery,
-      })
-
-      const response = await fetch(`https://api.themoviedb.org/3/discover/movie?${query}`)
-
-      if (!response.ok) {
-        throw new Error('Não foi possível obter os filmes')
       }
 
-      const data = await response.json()
-      const { results } = discoverScheme.parse(data)
+      try {
+        const { results } = await get(discoverScheme, 'discover/movie', query)
 
-      setMovies(results)
+        setMovies(results)
+      } catch {
+        setMovies([])
+        throw new Error('Não foi possível obter os filmes')
+      }
     }
 
     getMovies()

@@ -1,8 +1,9 @@
 import { z } from 'zod'
-import { CircularProgress } from '@/components/circular-progress'
-import { MovieCard } from '@/components/movie-card'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { get } from '@/utils/http'
+import { CircularProgress } from '@/components/circular-progress'
+import { MovieCard } from '@/components/movie-card'
 
 import { ReactComponent as DefaultImage } from '@/assets/icons/default.svg'
 
@@ -166,8 +167,6 @@ type Movie = {
   userRating: number
 }
 
-const apiKey = import.meta.env.VITE_TMDB_API_KEY
-
 function getReleaseInfo (movie: MovieReq) {
   const brReleaseExists = movie.release_dates.results.find(
     item => item.iso_3166_1 === 'BR',
@@ -201,45 +200,37 @@ export function MovieDetails () {
 
   useEffect(() => {
     async function getDetails () {
-      const query = new URLSearchParams({
-        api_key: apiKey,
+      const query = {
         append_to_response: 'recommendations,release_dates,credits,videos',
         language: 'pt-BR',
-      })
+      }
 
-      const response = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}?${query}`,
+      const movie = await get(movieReqSchema, `movie/${movieId}`, query)
+
+      const releaseInfo = getReleaseInfo(movie)
+
+      const releaseDate = new Date(releaseInfo.release_date)
+        .toLocaleDateString('pt-BR', { timeZone: 'UTC' })
+
+      const duration = (
+        Math.floor(movie.runtime / 60) + 'h ' + movie.runtime % 60 + 'm'
       )
 
-      if (response.ok) {
-        const data = await response.json()
-        const movie = movieReqSchema.parse(data)
-
-        const releaseInfo = getReleaseInfo(movie)
-
-        const releaseDate = new Date(releaseInfo.release_date)
-          .toLocaleDateString('pt-BR', { timeZone: 'UTC' })
-
-        const duration = (
-          Math.floor(movie.runtime / 60) + 'h ' + movie.runtime % 60 + 'm'
-        )
-
-        setMovieData({
-          id: movie.id,
-          genres: movie.genres,
-          title: movie.title,
-          overview: movie.overview,
-          posterPath: movie.poster_path,
-          recommendations: movie.recommendations.results.slice(0, 6),
-          credits: movie.credits,
-          trailer: movie.videos.results.find(item => item.type === 'Trailer'),
-          ageRestriction: releaseInfo.certification,
-          country: releaseInfo.country,
-          releaseDate,
-          duration,
-          userRating: Math.round(movie.vote_average * 10),
-        })
-      }
+      setMovieData({
+        id: movie.id,
+        genres: movie.genres,
+        title: movie.title,
+        overview: movie.overview,
+        posterPath: movie.poster_path,
+        recommendations: movie.recommendations.results.slice(0, 6),
+        credits: movie.credits,
+        trailer: movie.videos.results.find(item => item.type === 'Trailer'),
+        ageRestriction: releaseInfo.certification,
+        country: releaseInfo.country,
+        releaseDate,
+        duration,
+        userRating: Math.round(movie.vote_average * 10),
+      })
     }
 
     getDetails()
