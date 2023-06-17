@@ -2,17 +2,9 @@ import { z } from 'zod'
 import { useEffect, useState } from 'react'
 import { Genres } from '@/components/genres'
 import { MovieCard } from '@/components/movie-card'
-import { get } from '@/utils/http'
 import { discoverScheme, moviesService } from '@/services/movies-services'
+import { GenreList, genresService } from '@/services/genres-services'
 
-const genresSchema = z.object({
-  genres: z.array(z.object({
-    name: z.string(),
-    id: z.number(),
-  })),
-})
-
-export type GenreList = z.infer<typeof genresSchema>['genres']
 type Movies = z.infer<typeof discoverScheme>['results']
 
 export function Home () {
@@ -24,9 +16,7 @@ export function Home () {
   useEffect(() => {
     async function getGenres () {
       try {
-        const { genres } = await get(genresSchema, 'genre/movie/list', {
-          language: 'pt-BR',
-        })
+        const { genres } = await genresService.listGenres()
 
         setGenres(genres)
       } catch {

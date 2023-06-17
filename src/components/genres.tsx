@@ -1,4 +1,4 @@
-import { GenreList } from '@/pages/home'
+import { GenreList } from '@/services/genres-services'
 import { GenreItem } from './genre-item'
 
 type GenresProps = {
