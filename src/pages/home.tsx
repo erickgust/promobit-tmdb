@@ -3,23 +3,13 @@ import { useEffect, useState } from 'react'
 import { Genres } from '@/components/genres'
 import { MovieCard } from '@/components/movie-card'
 import { get } from '@/utils/http'
+import { discoverScheme, moviesService } from '@/services/movies-services'
 
 const genresSchema = z.object({
   genres: z.array(z.object({
     name: z.string(),
     id: z.number(),
   })),
-})
-
-const discoverScheme = z.object({
-  page: z.number(),
-  results: z.array(z.object({
-    poster_path: z.string().nullable(),
-    release_date: z.string(),
-    title: z.string(),
-    id: z.number(),
-  })),
-  total_pages: z.number(),
 })
 
 export type GenreList = z.infer<typeof genresSchema>['genres']
@@ -50,19 +40,8 @@ export function Home () {
 
   useEffect(() => {
     async function getMovies () {
-      const selectedGenresQuery = selectedGenres.join('|')
-
-      const query = {
-        language: 'pt-BR',
-        sort_by: 'popularity.desc',
-        include_adult: 'false',
-        include_video: 'false',
-        page: '1',
-        with_genres: selectedGenresQuery,
-      }
-
       try {
-        const { results } = await get(discoverScheme, 'discover/movie', query)
+        const { results } = await moviesService.listMovies(selectedGenres)
 
         setMovies(results)
       } catch {
