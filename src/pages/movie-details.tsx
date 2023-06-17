@@ -1,9 +1,10 @@
 import { z } from 'zod'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { get } from '@/utils/http'
-import { CircularProgress } from '@/components/circular-progress'
 import { MovieCard } from '@/components/movie-card'
+import { CircularProgress } from '@/components/circular-progress'
+
+import { creditsSchema, movieReqSchema, moviesService } from '@/services/movies-services'
 
 import { ReactComponent as DefaultImage } from '@/assets/icons/default.svg'
 
@@ -68,77 +69,6 @@ function ActorProfile (props: ActorProfileProps) {
   )
 }
 
-const creditsSchema = z.object({
-  cast: z.array(
-    z.object({
-      id: z.number(),
-      name: z.string(),
-      character: z.string(),
-      profile_path: z.string().nullable(),
-    }),
-  ),
-  crew: z.array(
-    z.object({
-      id: z.number(),
-      name: z.string(),
-      job: z.string(),
-    }),
-  ),
-})
-
-const movieReqSchema = z.object({
-  id: z.number(),
-  runtime: z.number(),
-  genres: z.array(
-    z.object({
-      id: z.number(),
-      name: z.string(),
-    }),
-  ),
-  title: z.string(),
-  overview: z.string(),
-  poster_path: z.string(),
-  vote_average: z.number(),
-  recommendations: z.object({
-    results: z.array(
-      z.object({
-        id: z.number(),
-        title: z.string(),
-        poster_path: z.string().nullable(),
-        release_date: z.string(),
-      }),
-    ),
-  }),
-  release_dates: z.object({
-    results: z.array(
-      z.object({
-        iso_3166_1: z.string(),
-        release_dates: z.array(
-          z.object({
-            certification: z.string(),
-            release_date: z.string(),
-          }),
-        ),
-      }),
-    ),
-  }),
-  release_date: z.string(),
-  production_countries: z.array(
-    z.object({
-      iso_3166_1: z.string(),
-    }),
-  ),
-  credits: creditsSchema,
-  videos: z.object({
-    results: z.array(
-      z.object({
-        key: z.string(),
-        type: z.string(),
-      }),
-    ),
-  }),
-})
-
 type MovieReq = z.infer<typeof movieReqSchema>
 
 type Movie = {
@@ -200,12 +130,7 @@ export function MovieDetails () {
 
   useEffect(() => {
     async function getDetails () {
-      const query = {
-        append_to_response: 'recommendations,release_dates,credits,videos',
-        language: 'pt-BR',
-      }
-
-      const movie = await get(movieReqSchema, `movie/${movieId}`, query)
+      const movie = await moviesService.getMovieById(movieId)
 
       const releaseInfo = getReleaseInfo(movie)
 
