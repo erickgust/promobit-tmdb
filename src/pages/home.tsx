@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Genres } from '@/components/genres'
 import { MovieCard } from '@/components/movie-card'
 import { moviesService } from '@/services/movies-services'
-import { GenreList, genresService } from '@/services/genres-services'
-import { useQuery } from '@tanstack/react-query'
+import { genresService } from '@/services/genres-services'
 
 export function Home () {
-  const [genres, setGenres] = useState<GenreList>([])
   const [selectedGenres, setSelectedGenres] = useState<number[]>([])
 
   const { data, isError, isLoading } = useQuery({
@@ -16,20 +15,10 @@ export function Home () {
     },
   })
 
-  useEffect(() => {
-    async function getGenres () {
-      try {
-        const { genres } = await genresService.listGenres()
-
-        setGenres(genres)
-      } catch {
-        setGenres([])
-        throw new Error('Não foi possível obter os gêneros')
-      }
-    }
-
-    getGenres()
-  }, [])
+  const { data: genresData } = useQuery({
+    queryKey: ['genres'],
+    queryFn: genresService.listGenres,
+  })
 
   if (isLoading) {
     return <div>Carregando...</div>
@@ -39,6 +28,7 @@ export function Home () {
     return <div>Não foi possível obter os filmes</div>
   }
 
+  const genres = genresData?.genres ?? []
   const movies = data.results
 
   function handleSelectedGenre (id: number) {
