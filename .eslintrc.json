@@ -19,7 +19,8 @@
   },
   "plugins": [
     "react",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "@tanstack/query"
   ],
   "settings": {
     "react": {
@@ -41,16 +42,18 @@
       "warn",
       "prefer-single"
     ],
-    "multiline-ternary": "off",
-    "no-undef": "off",
-    "react/react-in-jsx-scope": "off",
-    "react/jsx-pascal-case": "off",
-    "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "off",
       {
         "ignoreRestSiblings": true
       }
-    ]
+    ],
+    "multiline-ternary": "off",
+    "no-undef": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-pascal-case": "off",
+    "no-unused-vars": "off",
+    "@tanstack/query/exhaustive-deps": "error",
+    "@tanstack/query/prefer-query-object-syntax": "error"
   }
 }
