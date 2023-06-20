@@ -1,17 +1,20 @@
-import { z } from 'zod'
 import { useEffect, useState } from 'react'
 import { Genres } from '@/components/genres'
 import { MovieCard } from '@/components/movie-card'
-import { discoverScheme, moviesService } from '@/services/movies-services'
+import { moviesService } from '@/services/movies-services'
 import { GenreList, genresService } from '@/services/genres-services'
-
-type Movies = z.infer<typeof discoverScheme>['results']
+import { useQuery } from '@tanstack/react-query'
 
 export function Home () {
-  const [movies, setMovies] = useState<Movies>([])
-
   const [genres, setGenres] = useState<GenreList>([])
   const [selectedGenres, setSelectedGenres] = useState<number[]>([])
+
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ['movies', selectedGenres],
+    queryFn: () => {
+      return moviesService.listMovies(selectedGenres)
+    },
+  })
 
   useEffect(() => {
     async function getGenres () {
@@ -28,20 +31,15 @@ export function Home () {
     getGenres()
   }, [])
 
-  useEffect(() => {
-    async function getMovies () {
-      try {
-        const { results } = await moviesService.listMovies(selectedGenres)
+  if (isLoading) {
+    return <div>Carregando...</div>
+  }
 
-        setMovies(results)
-      } catch {
-        setMovies([])
-        throw new Error('Não foi possível obter os filmes')
-      }
-    }
+  if (isError) {
+    return <div>Não foi possível obter os filmes</div>
+  }
 
-    getMovies()
-  }, [selectedGenres])
+  const movies = data.results
 
   function handleSelectedGenre (id: number) {
     const alreadySelected = selectedGenres.includes(id)
