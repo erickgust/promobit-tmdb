@@ -1,18 +1,24 @@
 import { z } from 'zod'
 
+const apiKey = import.meta.env.VITE_TMDB_API_KEY
+const baseUrl = 'https://api.themoviedb.org/3/'
+
 export async function get <T> (
   zodSchema: z.ZodSchema<T>,
   path: string,
   query: Record<string, string> = {},
 ): Promise<T> {
-  const baseURL = 'https://api.themoviedb.org/3/'
-  const queryParams = new URLSearchParams({
-    ...query,
-    api_key: import.meta.env.VITE_TMDB_API_KEY,
-  })
-  const url = `${baseURL}${path}?${queryParams}`
+  const url = new URL(path, baseUrl)
 
-  const response = await fetch(url)
+  for (const [key, value] of Object.entries(query)) {
+    url.searchParams.append(key, value)
+  }
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  })
 
   if (!response.ok) {
     throw new Error(response.statusText)
