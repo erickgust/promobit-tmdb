@@ -8,6 +8,7 @@ import { creditsSchema, movieReqSchema, moviesService } from '@/services/movies-
 
 import { ReactComponent as DefaultImage } from '@/assets/icons/default.svg'
 import { Spinner } from '@/components/spinner'
+import { useEffect } from 'react'
 
 type CrewInfoProps = {
   name: string
@@ -157,6 +158,16 @@ export function MovieDetails () {
       } as Movie
     },
   })
+
+  useEffect(() => {
+    if (movieData) {
+      document.title = `${movieData.title} - TMDB`
+    }
+
+    return () => {
+      document.title = 'Início - TMDB'
+    }
+  }, [movieData])
 
   if (isLoading) {
     return (
