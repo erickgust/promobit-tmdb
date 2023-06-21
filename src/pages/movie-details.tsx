@@ -228,7 +228,7 @@ export function MovieDetails () {
               <div className='grid gap-6 grid-cols-[repeat(auto-fit,minmax(100px,1fr))] mt-8'>
                 {topCrewMembers?.map(crewMember => (
                   <CrewInfo
-                    key={crewMember.id}
+                    key={crewMember.id + crewMember.job}
                     name={crewMember.name}
                     role={crewMember.job}
                   />
