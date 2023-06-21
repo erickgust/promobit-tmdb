@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { MovieCard } from '@/components/movie-card'
 import { CircularProgress } from '@/components/circular-progress'
@@ -7,6 +7,7 @@ import { CircularProgress } from '@/components/circular-progress'
 import { creditsSchema, movieReqSchema, moviesService } from '@/services/movies-services'
 
 import { ReactComponent as DefaultImage } from '@/assets/icons/default.svg'
+import { Spinner } from '@/components/spinner'
 
 type CrewInfoProps = {
   name: string
@@ -159,16 +160,22 @@ export function MovieDetails () {
 
   if (isLoading) {
     return (
-      <div className='flex justify-center items-center h-screen'>
-        <p>Carregando...</p>
+      <div className='flex justify-center items-center h-[calc(100vh-51px)]'>
+        <Spinner />
       </div>
     )
   }
 
   if (isError) {
     return (
-      <div className='flex justify-center items-center h-screen'>
-        <p>Ocorreu um erro</p>
+      <div className='flex flex-col justify-center items-center h-[calc(100vh-51px)]'>
+        <h1 className='font-bold'>Ocorreu um erro!</h1>
+        <Link
+          to='/'
+          className='text-blue-500 hover:underline'
+        >
+          Voltar para a página inicial
+        </Link>
       </div>
     )
   }
