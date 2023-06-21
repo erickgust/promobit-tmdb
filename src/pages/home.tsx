@@ -39,7 +39,9 @@ export function Home () {
 
       setSelectedGenres(filteredGenres)
     } else {
-      setSelectedGenres(prevState => [...prevState, id])
+      setSelectedGenres(prevState => {
+        return [...prevState, id].sort()
+      })
     }
   }
 
