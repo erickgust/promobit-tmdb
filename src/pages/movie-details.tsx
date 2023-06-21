@@ -126,6 +126,8 @@ function getReleaseInfo (movie: MovieReq) {
 export function MovieDetails () {
   const { movieId } = useParams()
   const [movieData, setMovieData] = useState<Movie | null>(null)
+
+  const topCast = movieData?.credits.cast.slice(0, 16)
   const topCrewMembers = movieData?.credits.crew.slice(0, 5)
 
   useEffect(() => {
@@ -229,7 +231,7 @@ export function MovieDetails () {
           <h2 className='font-bold text-2xl mb-4 sm:mb-6'>Elenco</h2>
 
           <div className='overflow-x-auto whitespace-nowrap'>
-            {movieData?.credits.cast.map(actor => (
+            {topCast?.map(actor => (
               <ActorProfile
                 key={actor.id}
                 name={actor.name}
