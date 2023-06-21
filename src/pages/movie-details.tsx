@@ -182,6 +182,7 @@ export function MovieDetails () {
 
   const topCast = movieData.credits.cast.slice(0, 16)
   const topCrewMembers = movieData.credits.crew.slice(0, 5)
+  const hasRecommendations = movieData.recommendations.length > 0
 
   return (
     <main>
@@ -200,7 +201,7 @@ export function MovieDetails () {
 
             <div>
               <ul className='flex text-base font-normal flex-col sm:flex-row gap-2 sm:gap-0 flex-wrap'>
-                <li className='border p-1 h-min w-min rounded text-gray-400 border-gray-400 leading-none flex items-center'>
+                <li className='border p-1 h-min w-min whitespace-nowrap rounded text-gray-400 border-gray-400 leading-none flex items-center'>
                   {movieData.ageRestriction || 'G'}
                 </li>
 
@@ -223,9 +224,11 @@ export function MovieDetails () {
               </div>
 
               <div>
-                <h2 className='text-xl font-bold mb-4'>
-                  Sinopse
-                </h2>
+                {!!movieData.overview && (
+                  <h2 className='text-xl font-bold mb-4'>
+                    Sinopse
+                  </h2>
+                )}
 
                 <p className='text-base'>
                   {movieData.overview}
@@ -251,7 +254,7 @@ export function MovieDetails () {
           <h2 className='font-bold text-2xl mb-4 sm:mb-6'>Elenco</h2>
 
           <div className='overflow-x-auto whitespace-nowrap'>
-            {topCast?.map(actor => (
+            {topCast.map(actor => (
               <ActorProfile
                 key={actor.id}
                 name={actor.name}
@@ -277,21 +280,23 @@ export function MovieDetails () {
         </section>
         )}
 
-        <section className='mt-12 sm:mt-16'>
-          <h2 className='font-bold text-2xl mb-4 sm:mb-6'>Recomendações</h2>
+        {hasRecommendations && (
+          <section className='mt-12 sm:mt-16'>
+            <h2 className='font-bold text-2xl mb-4 sm:mb-6'>Recomendações</h2>
 
-          <div className='flex gap-4 sm:gap-8 flex-wrap'>
-            {movieData.recommendations.map(recommendation => (
-              <MovieCard
-                key={recommendation.id}
-                date={recommendation.release_date}
-                poster={`https://image.tmdb.org/t/p/w500${recommendation.poster_path}`}
-                title={recommendation.title}
-                id={recommendation.id}
-              />
-            ))}
-          </div>
-        </section>
+            <div className='flex gap-4 sm:gap-8 flex-wrap'>
+              {movieData.recommendations.map(recommendation => (
+                <MovieCard
+                  key={recommendation.id}
+                  date={recommendation.release_date}
+                  poster={`https://image.tmdb.org/t/p/w500${recommendation.poster_path}`}
+                  title={recommendation.title}
+                  id={recommendation.id}
+                />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </main>
   )
