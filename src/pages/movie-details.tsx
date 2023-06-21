@@ -28,7 +28,7 @@ type ListItemProps = {
 
 function ListItem ({ children }: ListItemProps) {
   return (
-    <li className='before:hidden sm:before:block before:absolute before:w-1 before:h-1 before:rounded-full before:bg-white relative before:top-1/2 before:-translate-y-1/2 before:left-2 pl-5'>
+    <li className='before:hidden sm:before:block before:absolute before:w-1 before:h-1 before:rounded-full before:bg-white relative before:top-1/2 before:-translate-y-1/2 before:left-2 sm:pl-5'>
       {children}
     </li>
   )
@@ -177,8 +177,8 @@ export function MovieDetails () {
             </h1>
 
             <div>
-              <ul className='flex text-base font-normal flex-col sm:flex-row'>
-                <li className='border px-1 rounded text-gray-400 border-gray-400 leading-none flex items-center'>
+              <ul className='flex text-base font-normal flex-col sm:flex-row gap-2 sm:gap-0 flex-wrap'>
+                <li className='border p-1 h-min w-min rounded text-gray-400 border-gray-400 leading-none flex items-center'>
                   {movieData?.ageRestriction || 'G'}
                 </li>
 
