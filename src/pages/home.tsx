@@ -58,7 +58,7 @@ export function Home () {
       )}
 
       {hasMovies && (
-        <section className='max-w-7xl px-4 py-8 flex justify-center gap-4 sm:gap-8 flex-wrap'>
+        <section className='mx-auto max-w-7xl px-4 py-8 flex justify-center gap-4 sm:gap-8 flex-wrap'>
           {movies.map(movie => (
             <MovieCard
               key={movie.title}
