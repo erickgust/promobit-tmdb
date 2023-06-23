@@ -157,6 +157,7 @@ export function MovieDetails () {
         userRating: Math.round(movie.vote_average * 10),
       } as Movie
     },
+    staleTime: 1000 * 60 * 60 * 24, // 1 day
   })
 
   useEffect(() => {

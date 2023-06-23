@@ -14,11 +14,13 @@ export function Home () {
     queryFn: () => {
       return moviesService.listMovies(selectedGenres)
     },
+    staleTime: 1000 * 60 * 60, // 1 hour
   })
 
   const { data: genresData } = useQuery({
     queryKey: ['genres'],
     queryFn: genresService.listGenres,
+    staleTime: 1000 * 60 * 60 * 24 * 7, // 1 week
   })
 
   if (isError) {
